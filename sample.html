@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.121.1/build/three.module.js';
+
+import * as ProtoThree from "/src/ProtoThree/main.mjs";
+
+// const
+const M_WHITE = new THREE.MeshBasicMaterial({color: 0xeeeeee});
+const M_BLACK = new THREE.MeshBasicMaterial({color: 0x111111});
+const M_RED = new THREE.MeshBasicMaterial({color: 0xbb1111});
+
+const G_BOX = new THREE.BoxGeometry(1,1,1);
+
+// scene setup
+class Sample extends ProtoThree.AbstractScene {
+  constructor(){
+    super();
+    console.log("Sample.constructor");
+
+    const box = new THREE.Mesh(G_BOX, M_RED);
+    this.add(box);
+
+  }
+
+  setupCamera(){
+    console.log("Sample.setupCamera");
+    const cam_size = 4;
+    const aspect_r = window.innerHeight / window.innerWidth;
+    const cam = new THREE.OrthographicCamera(
+      -cam_size, cam_size,
+      cam_size * aspect_r, -cam_size*aspect_r,
+      1, 1000);
+    cam.position.set(0,0,2);
+    // cam.position.set(5,-50,20);
+    cam.lookAt(new THREE.Vector3(0,0,0));
+    return cam;
+  }
+
+  create(){
+    console.log("Sample.create");
+  }
+  update(){
+    console.log("Sample.update");
+
+  }
+  shutdown(){
+    console.log("Sample.shutdown");
+    this.children.forEach((e)=>{e.destroy});
+  }
+}
+
+class Sample2 extends ProtoThree.AbstractScene {
+  constructor(){
+    super();
+
+    const box = new THREE.Mesh(G_BOX, M_BLACK);
+    this.add(box);
+
+  }
+
+  setupCamera(){
+    const cam_size = 4;
+    const aspect_r = window.innerHeight / window.innerWidth;
+    const cam = new THREE.OrthographicCamera(
+      -cam_size, cam_size,
+      cam_size * aspect_r, -cam_size*aspect_r,
+      1, 1000);
+    cam.position.set(0,0,2);
+    // cam.position.set(5,-50,20);
+    cam.lookAt(new THREE.Vector3(0,0,0));
+    return cam;
+  }
+
+  create(){
+  }
+  update(){
+
+  }
+  shutdown(){
+    
+  }
+}
+
+
+// boot
+(()=>{
+  window.addEventListener('DOMContentLoaded', () => {
+    const proto = new ProtoThree.Manager("#container");
+    proto.scene.add('sample', Sample);
+    proto.scene.add('sample2', Sample2);
+    proto.scene.start('sample');
+
+    window.d = proto;
+
+    console.log(proto);
+
+    window.addEventListener('click', ()=>{
+      if(proto.scene.current === proto.scene.scenes.sample){
+        proto.scene.start('sample2');
+      }else{
+        proto.scene.start('sample');
+      }
+    });
+  });
+})();
+</script>
+  </head>
+  <body style="margin:0;">
+    <div id="container"></div>
+  </body>
+</html>
