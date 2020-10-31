@@ -25,30 +25,19 @@ class Sample extends ProtoThree.AbstractScene {
 
   }
 
-  setupCamera(){
-    console.log("Sample.setupCamera");
-    const cam_size = 4;
-    const aspect_r = window.innerHeight / window.innerWidth;
-    const cam = new THREE.OrthographicCamera(
-      -cam_size, cam_size,
-      cam_size * aspect_r, -cam_size*aspect_r,
-      1, 1000);
-    cam.position.set(0,0,2);
-    // cam.position.set(5,-50,20);
-    cam.lookAt(new THREE.Vector3(0,0,0));
-    return cam;
-  }
-
   create(){
     console.log("Sample.create");
   }
   update(){
     console.log("Sample.update");
-
   }
   shutdown(){
     console.log("Sample.shutdown");
     this.children.forEach((e)=>{e.destroy});
+  }
+  
+  onClick(e){
+    this.manager.scene.start("sample2");
   }
 }
 
@@ -56,31 +45,27 @@ class Sample2 extends ProtoThree.AbstractScene {
   constructor(){
     super();
 
-    const box = new THREE.Mesh(G_BOX, M_BLACK);
-    this.add(box);
+    this.box = new THREE.Mesh(G_BOX, M_BLACK);
+    this.add(this.box);
 
-  }
-
-  setupCamera(){
-    const cam_size = 4;
-    const aspect_r = window.innerHeight / window.innerWidth;
-    const cam = new THREE.OrthographicCamera(
-      -cam_size, cam_size,
-      cam_size * aspect_r, -cam_size*aspect_r,
-      1, 1000);
-    cam.position.set(0,0,2);
-    // cam.position.set(5,-50,20);
-    cam.lookAt(new THREE.Vector3(0,0,0));
-    return cam;
   }
 
   create(){
+    
   }
   update(){
-
   }
   shutdown(){
-    
+  }
+  onClick(e){
+    const hits = this.manager.input.mouse_raycaster.intersectObjects(this.children);
+    hits.forEach((e)=>{
+      console.log('hit');
+    });
+
+    if(hits.length < 1){
+      this.manager.scene.start("sample");
+    }
   }
 }
 
@@ -97,13 +82,13 @@ class Sample2 extends ProtoThree.AbstractScene {
 
     console.log(proto);
 
-    window.addEventListener('click', ()=>{
-      if(proto.scene.current === proto.scene.scenes.sample){
-        proto.scene.start('sample2');
-      }else{
-        proto.scene.start('sample');
-      }
-    });
+    // window.addEventListener('click', ()=>{
+    //   if(proto.scene.current === proto.scene.scenes.sample){
+    //     proto.scene.start('sample2');
+    //   }else{
+    //     proto.scene.start('sample');
+    //   }
+    // });
   });
 })();
 </script>

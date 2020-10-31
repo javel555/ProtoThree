@@ -1,14 +1,11 @@
 import * as THREE from 'https://unpkg.com/three@0.121.1/build/three.module.js';
 
 import SceneManager from "./SceneManager.mjs";
+import InputManager from "./InputManager.mjs";
 
 export default class Manager {
   constructor(parent, width, height, render_option) {
     console.log(" ==== ProtoThree Start ==== ")
-
-    // setup proto three
-    this.scene = new SceneManager(this);
-    this.loadFunc = () => { return []; };
 
     // setup three.js - s
     width ||= window.innerWidth;
@@ -26,10 +23,16 @@ export default class Manager {
     wrapper.appendChild(renderer.domElement);
 
     this.three = {
+      canvas: renderer.domElement,
       renderer: renderer
     };
     // setup three.js - e
 
+    // setup proto three
+    this.scene = new SceneManager(this);
+    this.input = new InputManager(this);
+    this.loadFunc = () => { return []; };
+    
     // start main loop
     this.tick();
   }
@@ -44,6 +47,7 @@ export default class Manager {
 
   tick() {
     if (this.scene.current && this.scene.current.camera) {
+      this.input.update();
       this.scene.update();
       this.three.renderer.render(this.scene.current, this.scene.current.camera);
     }
