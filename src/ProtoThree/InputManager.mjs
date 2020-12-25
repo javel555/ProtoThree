@@ -31,10 +31,14 @@ export default  class InputManager {
         window.addEventListener("click", (e)=>{
             this.manager.scene.current.onClick(e);
         });
-        window.addEventListener("onKeyDown", (e)=>{
-            // FIXME
+        window.addEventListener("keydown", (e) => {
+            console.log('keydown');
+            this.manager.scene.current.onKeyDown(e);
         });
-
+        window.addEventListener("keyup", (e) => {
+            console.log('keyup');
+            this.manager.scene.current.onKeyUp(e);
+        });
     }
 
     update(){

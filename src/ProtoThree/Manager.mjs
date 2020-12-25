@@ -30,10 +30,18 @@ export default class Manager {
 
     // setup proto three
     this.scene = new SceneManager(this);
+    window.addEventListener('resize', () => {
+      // リサイズ対応
+      this.scene.current.camera.aspect = window.innerWidth / window.innerHeight;
+      this.scene.current.camera.updateProjectionMatrix();
+      this.three.renderer.setSize( window.innerWidth, window.innerHeight );
+    }, false );
+
     this.input = new InputManager(this);
     this.loadFunc = () => { return []; };
-    
+
     // start main loop
+    this.prevTime = performance.now();
     this.tick();
   }
 
@@ -46,12 +54,14 @@ export default class Manager {
   }
 
   tick() {
+    this.time = performance.now();
     if (this.scene.current && this.scene.current.camera) {
       this.input.update();
       this.scene.update();
       this.three.renderer.render(this.scene.current, this.scene.current.camera);
     }
     requestAnimationFrame(this.tick.bind(this));
+    this.prevTime = this.time;
   }
 
 };

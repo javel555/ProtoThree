@@ -38,5 +38,11 @@ export default class AbstractScene extends THREE.Scene {
   onClick(e){
     // NOP
   }
+  onKeyDown(e) {
+    // NOP
+  }
+  onKeyUp(e) {
+    // NOP
+  }
 
 };
